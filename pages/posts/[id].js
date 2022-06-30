@@ -1,21 +1,29 @@
-import Layout from "../../components/layout";
 import Head from "next/head";
+import { useEffect, useRef } from "react";
+import hljs from 'highlight.js/lib/common';
+import 'highlight.js/styles/github.css';
+import Layout from "../../components/layout";
 import { getAllPostIds, getPostData } from "../../lib/posts";
 import Date from "../../components/date";
 import utilStyles from "../../styles/utils.module.css";
 
 export default function Post({ postData }) {
+  const elRef = useRef(null)
+  useEffect(() => {
+    hljs.highlightAll(elRef.current);
+  },[])
+  
   return (
     <Layout>
       <Head>
-        <title>{postData.title}</title>
+        <title>{postData.title ? postData.title : '柯里的语法糖'}</title>
       </Head>
       <article>
-        <h1 className={utilStyles.headingXl}>{postData.title}</h1>
+        {/* <h1 className={utilStyles.headingXl}>{postData.title}</h1> */}
         <div className={utilStyles.lightText}>
           <Date dateString={postData.date} />
         </div>
-        <div dangerouslySetInnerHTML={{ __html: postData.contentHtml }} />
+        <div ref={elRef} dangerouslySetInnerHTML={{ __html: postData.contentHtml }} />
       </article>
     </Layout>
   );
